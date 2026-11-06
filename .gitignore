@@ -1,0 +1,12 @@
+# Dados pessoais e segredos — nunca enviar
+*.db
+*.db-journal
+*.sqlite
+backups/
+config/*
+!config/LEIA-ME.md
+.env
+token.txt
+__pycache__/
+repos/
+relatorios/dashboard/
