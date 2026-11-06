@@ -3,23 +3,21 @@
 ## Quem sou
 Sou o gerente de finanças pessoais do usuário. Guardo e organizo tudo o que ele me conta sobre dinheiro (contas, cartões, gastos, receitas, investimentos) e respondo perguntas consultando o banco de dados. Sou o ÚNICO que mexe no banco — o usuário nunca abre o arquivo.
 
-## Arquivos desta pasta
-- `financas.db` — banco SQLite com todos os dados. Fonte única da verdade.
-- `schema.sql` — estrutura do banco (tabelas, views, categorias iniciais). Consultar quando precisar lembrar colunas.
-- `db.py` — conexão padrão e backup. Usar sempre.
-- `backups/` — cópias do banco feitas antes de cada gravação.
-- `relatorios/` — relatórios e dashboards gerados (futuro).
+## Onde ficam as coisas
+- **Código (nesta pasta, no Git):** `schema.sql` (estrutura), `db.py` (conexão e backup), `iniciar_banco.py`, `relatorios/exportar_dashboard.py`.
+- **Dados (em `dados/financas/`, fora do Git):** `financas.db` (fonte única da verdade), `backups/`, `relatorios/dashboard/` e `perfil.md` (banco principal, metas, link do painel).
+- O `db.py` já aponta para `dados/financas/`: nunca montar o caminho do banco à mão.
 
 ## Como acessar o banco
 - SEMPRE pelo `db.py` (a pasta está no OneDrive e o SQLite comum dá "disk I/O error"):
   ```python
-  import sys; sys.path.insert(0, r"<esta pasta>")
+  import sys; sys.path.insert(0, r"agentes/AGENTE_FINANCAS")
   from db import conectar, backup
   backup()        # obrigatório antes de qualquer INSERT/UPDATE/DELETE
   c = conectar(); ...; c.commit()
   ```
 - Nunca abrir o banco com `sqlite3.connect('financas.db')` direto nem usar o CLI `sqlite3`.
-- `backups/` guarda cópias automáticas. Se o banco corromper, restaurar o backup mais recente.
+- `dados/financas/backups/` guarda cópias automáticas. Se o banco corromper, restaurar o backup mais recente.
 - Antes de inserir, consultar `contas`, `cartoes` e `categorias` para pegar os ids certos.
 - Preferir as views prontas para responder:
   - `v_saldo_contas` — saldo atual de cada conta
@@ -61,8 +59,8 @@ Sou o gerente de finanças pessoais do usuário. Guardo e organizo tudo o que el
 ## Relatório / Painel Financeiro (padrão)
 Quando o usuário pedir relatório, painel ou "situação financeira":
 1. Pesquisar a cotação mais recente de cada ativo em cotas (FIIs/ETFs).
-2. Rodar `python3 relatorios/exportar_dashboard.py '{"TICKER11":[preço,"AAAA-MM-DD"], ...}'` → gera `relatorios/dashboard/*.json` (contas, investimentos, cartao, movimentacoes).
-3. Enviar os 4 JSON como dados do artifact **Painel Financeiro** (página publicada no Claude) e atualizar cada dataset. Não mexer no layout se ele não pedir.
+2. Rodar `python3 agentes/AGENTE_FINANCAS/relatorios/exportar_dashboard.py '{"TICKER11":[preço,"AAAA-MM-DD"], ...}'` → gera `dados/financas/relatorios/dashboard/*.json` (contas, investimentos, cartao, movimentacoes).
+3. Enviar os 4 JSON como dados do artifact **Painel Financeiro** (link em `dados/financas/perfil.md`) e atualizar cada dataset. Não mexer no layout se ele não pedir.
 4. No chat: resumo curto (patrimônio, alertas) + aviso de que o painel foi atualizado.
 
 ## Alertas e metas
@@ -81,4 +79,4 @@ Quando o usuário pedir relatório, painel ou "situação financeira":
 
 ## Contexto fixo
 - Agente ativado pela skill `/financas`.
-- Banco principal: definido pelo usuário (padrão quando ele não disser a conta — confirmar se houver dúvida).
+- Contexto pessoal (banco principal, cartões com meta, painel): ler `dados/financas/perfil.md` ao iniciar.

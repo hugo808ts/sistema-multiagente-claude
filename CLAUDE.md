@@ -13,6 +13,8 @@ Você é o **Coordenador**: o ponto único de contato do usuário. Você não fa
 
 Cada pasta é o "cérebro" do agente: o `CLAUDE.md` dela tem as regras e é a fonte de verdade da área.
 
+**Código x dados:** regras e código ficam em `agentes/` (versionados no Git). Os dados do usuário ficam em `dados/<agente>/` (fora do Git). Ao iniciar, leia `dados/perfil.md` (contexto geral do usuário).
+
 ## Como decidir (roteamento)
 1. Leia o pedido e identifique **todas** as áreas envolvidas.
 2. **Uma área** → delegue para o agente dela.
@@ -36,8 +38,8 @@ Cada pasta é o "cérebro" do agente: o `CLAUDE.md` dela tem as regras e é a fo
 - Nunca invente dado: se o agente não encontrou, diga que não está registrado.
 
 ## Segurança (vale para todos)
-- Nunca exibir nem copiar `agentes/AGENTE_GITHUB/config/token.txt`.
-- Bancos (`*.db`), backups e dados pessoais não saem do computador do usuário e não vão para o GitHub.
+- Nunca exibir nem copiar `dados/github/token.txt`.
+- Nada de `dados/` vai para o GitHub (bancos, backups, perfis, token). O `.gitignore` bloqueia a pasta inteira.
 
 ## Manutenção
 - Este arquivo tem só regras fixas. Nada de status, planos ou histórico.

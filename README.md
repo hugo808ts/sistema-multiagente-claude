@@ -17,7 +17,8 @@ Uso real no dia a dia para estudos, finanças pessoais e gestão do GitHub.
 - **Human-in-the-loop** — nenhuma ação irreversível (gravar no banco, push, apagar) acontece sem aprovação; as confirmações sobem dos agentes para o Coordenador.
 - **Contexto isolado por agente** — cada especialista carrega só as próprias regras e dados.
 - **Agente com banco de dados** — o Agente Finanças opera um SQLite com views de saldo, fatura, limite e carteira, backup automático antes de cada escrita.
-- **Segurança por padrão** — dados pessoais, bancos e tokens nunca entram no Git; o Agente GitHub varre segredos antes de cada push.
+- **Código separado dos dados** — o repositório é a fonte única do sistema; os dados de cada usuário ficam em `dados/`, fora do Git. Melhorou um agente? É só um commit.
+- **Segurança por padrão** — bancos, perfis e tokens nunca entram no Git; o Agente GitHub varre segredos antes de cada push.
 - **Extensível** — adicionar um agente novo leva 3 arquivos.
 
 ## Arquitetura
@@ -96,10 +97,12 @@ Coordenador:  → Agente Finanças
 .
 ├── CLAUDE.md                  # Coordenador: roteamento e regras gerais
 ├── .claude/agents/            # subagentes (um por especialista)
-├── agentes/
-│   ├── AGENTE_FACULDADE/      # regras + base de conhecimento por matéria
+├── agentes/                   # CÓDIGO e regras (versionado)
+│   ├── AGENTE_FACULDADE/      # regras de estudo
 │   ├── AGENTE_FINANCAS/       # regras + schema.sql + db.py + relatórios
 │   └── AGENTE_GITHUB/         # regras + modelos de README
+├── dados_exemplo/             # modelo da pasta de dados
+├── dados/                     # SEUS dados (ignorado pelo Git)
 ├── skills/                    # skills de ativação para o Claude Cowork
 └── docs/ARQUITETURA.md        # arquitetura, decisões e extensão
 ```
@@ -112,11 +115,14 @@ Coordenador:  → Agente Finanças
 git clone https://github.com/hugo808ts/sistema-multiagente-claude.git
 cd sistema-multiagente-claude
 
-# cria o banco vazio do Agente Finanças
+# cria sua pasta de dados (fora do Git) a partir do modelo
+cp -r dados_exemplo dados
+
+# cria o banco vazio do Agente Finanças em dados/financas/
 python agentes/AGENTE_FINANCAS/iniciar_banco.py
 
 # (opcional) token do GitHub para o Agente GitHub
-# salve em agentes/AGENTE_GITHUB/config/token.txt
+# salve em dados/github/token.txt
 
 # inicia o Coordenador
 claude

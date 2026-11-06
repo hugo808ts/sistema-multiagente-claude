@@ -3,10 +3,11 @@
 *.db-journal
 *.sqlite
 backups/
-config/*
-!config/LEIA-ME.md
 .env
 token.txt
 __pycache__/
 repos/
 relatorios/dashboard/
+
+# Dados pessoais do usuário (fonte única: código no Git, dados aqui)
+dados/

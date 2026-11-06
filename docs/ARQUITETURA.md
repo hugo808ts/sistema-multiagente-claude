@@ -28,13 +28,19 @@ AGENTES_IA/
 │   ├── faculdade.md
 │   ├── financas.md
 │   └── github.md
-├── README.md                 → guia rápido da pasta
+├── README.md
 ├── docs/
 │   └── ARQUITETURA.md        → este arquivo
-└── agentes/
-    ├── AGENTE_FACULDADE/     → estudos na faculdade
-    ├── AGENTE_FINANCAS/      → finanças pessoais (SQLite + painel)
-    └── AGENTE_GITHUB/        → GitHub e portfólio
+├── agentes/                  → CÓDIGO e regras (no Git)
+│   ├── AGENTE_FACULDADE/     → estudos na faculdade
+│   ├── AGENTE_FINANCAS/      → finanças pessoais (SQLite + painel)
+│   └── AGENTE_GITHUB/        → GitHub e portfólio
+├── dados_exemplo/            → modelo da pasta de dados (no Git)
+└── dados/                    → DADOS do usuário (fora do Git)
+    ├── perfil.md             → contexto geral do usuário
+    ├── faculdade/            → perfil, prazos, grade, matérias
+    ├── financas/             → perfil, financas.db, backups, painel
+    └── github/               → perfil, token, clones
 ```
 
 ## Fluxo de um pedido
@@ -64,10 +70,11 @@ sequenceDiagram
 | Decisão | Motivo |
 |---|---|
 | Uma pasta por agente | Contexto isolado. Cada agente só carrega o que precisa. |
+| Código separado dos dados | O repositório é a fonte única: uma melhoria vira commit, sem sincronizar cópias. Dados pessoais nunca ficam junto do código versionado. |
 | `CLAUDE.md` só com regras fixas | Instruções enxutas e estáveis. Dados ficam em arquivos/banco. |
 | Confirmações centralizadas no Coordenador | Subagentes não falam com o usuário. Nenhuma ação irreversível sem OK. |
 | Delegação em paralelo | Pedidos com várias áreas respondem mais rápido. |
-| Dados pessoais fora do Git | `.gitignore` bloqueia `*.db`, backups, tokens e `config/`. |
+| Dados pessoais fora do Git | `.gitignore` bloqueia a pasta `dados/` inteira, além de `*.db`, backups e tokens por segurança extra. |
 
 ## Formas de usar
 

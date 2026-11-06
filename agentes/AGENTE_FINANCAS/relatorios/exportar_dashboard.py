@@ -2,17 +2,17 @@
 
 Uso:  python3 relatorios/exportar_dashboard.py '{"TICKER11": [10.00, "AAAA-MM-DD"], ...}'
       (cotação de cada ativo e a data dela; pesquisar na hora)
-Saída: relatorios/dashboard/{contas,investimentos,cartao,movimentacoes}.json
+Saída: dados/financas/relatorios/dashboard/{contas,investimentos,cartao,movimentacoes}.json
 """
 import sys, os, json, datetime, zoneinfo
 PASTA = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PASTA)
-from db import conectar
+from db import conectar, DADOS
 
 cot = json.loads(sys.argv[1]) if len(sys.argv) > 1 else {}
 c = conectar()
 r = lambda cent: round((cent or 0) / 100, 2)
-out = os.path.join(PASTA, "relatorios", "dashboard"); os.makedirs(out, exist_ok=True)
+out = os.path.join(DADOS, "relatorios", "dashboard"); os.makedirs(out, exist_ok=True)
 agora = datetime.datetime.now(zoneinfo.ZoneInfo("America/Sao_Paulo")).isoformat(timespec="minutes")
 
 contas = [{"conta": x["nome"], "instituicao": x["instituicao"], "tipo": x["tipo"], "saldo": r(x["saldo_centavos"])}
