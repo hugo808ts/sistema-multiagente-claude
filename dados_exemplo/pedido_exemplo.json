@@ -1,0 +1,10 @@
+{
+  "cliente": "Unidade Norte",
+  "data_entrega": "2030-01-15",
+  "refeicao": "almoco",
+  "itens": [
+    {"item": "Marmita executiva", "quantidade": 30},
+    {"item": "Marmita vegetariana", "quantidade": 5}
+  ],
+  "mensagem": "Oi! Pro almoço do dia 15 vamos precisar de 30 executivas e 5 vegetarianas."
+}

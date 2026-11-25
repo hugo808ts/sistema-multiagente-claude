@@ -1,0 +1,11 @@
+# Dados de operação e segredos: nunca vão para o Git
+dados/
+*.db
+*.db-journal
+*.sqlite
+backups/
+.env
+token.txt
+
+__pycache__/
+*.pyc
